@@ -12,6 +12,7 @@ def get_tasks(request):
     fourth = Task.objects.all()
     return render(request, 'tasklist.html', { 'first': first, 'second': second})
 
-# class TaskListOverwrite(CsrfExemptMixin, JSONRequestResponseMixin, View):
-#     def post(self, request):
-#         for id,
+class TaskListOverwrite(CsrfExemptMixin, JSONRequestResponseMixin, View):
+    def post(self, request):
+        print(self.request_json.items())
+        return self.render_json_response({'saved': 'OK'})

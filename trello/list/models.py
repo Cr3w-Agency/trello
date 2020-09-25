@@ -9,7 +9,7 @@ class List(models.Model):
         ordering = ('-created',)
 
     def __str__(self):
-        return self.name
+        return str(self.created)
 
 class Task(models.Model):
     list = models.ForeignKey(List, on_delete=models.CASCADE)

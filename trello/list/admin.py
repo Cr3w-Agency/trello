@@ -7,4 +7,4 @@ class ListAdmin(admin.ModelAdmin):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ['list', 'title', 'created']
+    list_display = ['pk', 'list', 'title', 'order', 'created']
