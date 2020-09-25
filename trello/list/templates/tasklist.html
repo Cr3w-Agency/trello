@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <script src="{% static 'js/script.js' %}" defer></script>
+</head>
+<body>
+<div class="list-container">
+    <div class="container">
+        {% for task in first %}
+            <p class="draggable" draggable="true" data-order={{task.order}} data-list={{task.list}}>{{ task.title }}</p>
+        {% endfor %}
+    </div>
+    <div class="container">
+        {% for task in second %}
+            <p class="draggable" draggable="true" data-order={{task.order}}>{{ task.title }}</p>
+        {% endfor %}
+    </div>
+</div>
+</body>
+</html>

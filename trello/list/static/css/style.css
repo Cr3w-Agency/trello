@@ -1,0 +1,30 @@
+body {
+  margin: 0;
+}
+
+h3 {
+  color: red;
+}
+
+.list-container {
+    display: flex;
+}
+
+.container {
+  background-color: #333;
+  padding: 1rem;
+  margin: 1rem;
+  width: 300px;
+  min-height: 100px;
+}
+
+.draggable {
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid black;
+  cursor: move;
+}
+
+.draggable.dragging {
+  opacity: 0.8;
+}
