@@ -9,88 +9,48 @@
 </head>
 <body>
 <div class="list-container">
-    <div class="container">
-        {% for task in first %}
+    <div class="container" data-id="{{first_list}}">
+        {% for task in first_tasks %}
             <p class="draggable" draggable="true" data-list={{task.list}} data-id={{task.id}}>{{ task.title }}</p>
         {% endfor %}
     </div>
-    <div class="container">
-        {% for task in second %}
+    <div class="container" data-id="{{second_list}}">
+        {% for task in second_tasks %}
             <p class="draggable" draggable="true" data-list={{task.list}} data-id={{task.id}}>{{ task.title }}</p>
         {% endfor %}
     </div>
 </div>
 <script>
-    const draggables = document.querySelectorAll('.draggable')
-const containers = document.querySelectorAll('.container')
+    const drag = document.querySelectorAll('.draggable')
+    const cont = document.querySelectorAll('.container')
+    const url = "{% url 'list:overwrite' %}"
 
-draggables.forEach(item => {
-  item.addEventListener('dragstart', () => {
-    item.classList.add('dragging')
-  })
-
-//  item.addEventListener('click', (e) => {
-//    console.log(e.target.dataset.list)
-//  })
-
-  item.addEventListener('dragend', () => {
-    item.classList.remove('dragging')
-  })
-})
-
-containers.forEach(container => {
-  container.addEventListener('dragover', (e) => {
-    e.preventDefault()
-    const afterElement = getDragAfterElement(container, e.clientY)
-    const draggable = document.querySelector('.dragging')
-    if (afterElement == null) {
-      container.appendChild(draggable)
-    } else {
-      container.insertBefore(draggable, afterElement)
-    }
-//    console.log(draggable.dataset.list) List id
-//    console.log(container.querySelectorAll('p'))
-    const listId = draggable.dataset.list
-    postData(listId, container)
-  })
-})
-
-function getDragAfterElement(container, y) {
-  const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')]
-
-  return  draggableElements.reduce((closest, child) => {
-    const box = child.getBoundingClientRect()
-    const offset = y - box.top - box.height / 2
-    if (offset < 0 && offset > closest.offset) {
-      return { offset: offset, element: child}
-    } else {
-      return closest
-    }
-  }, {offset: Number.NEGATIVE_INFINITY}).element
-}
-
-function postData(listId, container) {
-    const context = {
-        list: listId,
-        tasks: {}
-    }
-    const tasks = container.querySelectorAll('p')
-
-    for (i=0; i < tasks.length; i++) {
-        const id = tasks[i].dataset.id
-        context.tasks[id] = i + 1
-    }
-
-    console.log(JSON.stringify(context))
-    const url = 'https://echo-json.glitch.me/awesome-path'
-    fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
-        body: JSON.stringify(context)
+    drag.forEach(item => {
+      item.addEventListener('dragend', () => {
+        postData(item)
+      })
     })
-    .then(() => console.log('send'))
-    .catch(() => console.log('error'))
-}
+
+    function postData(item) {
+        const listId = item.parentElement.dataset.id
+        const tasks = item.parentElement.querySelectorAll('p')
+        const context = {
+            list: listId,
+            tasks: {}
+        }
+
+        for (i=0; i < tasks.length; i++) {
+            const id = tasks[i].dataset.id
+            context.tasks[id] = i + 1
+        }
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            body: JSON.stringify(context)
+        })
+        .then((res) => console.log(res))
+        .catch(() => console.log('error'))
+    }
 </script>
 </body>
 </html>
